@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff6b00">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Pedido - Recolección</title>
+  <style>
+    :root {
+      --accent: #ff6b00;
+      --inactive: #d3d3d3;
+      --bg: #f7f7f7;
+      --text: #333;
+      --success: #16a34a;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh; /* 👈 clave */
+  display: flex;
+  justify-content: center;
+}
+
+
+    .container {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+
+}
+
+
+    /* --- PÁGINA DE NAVEGACIÓN --- */
+    .delivery-state {
+      position: absolute;
+      inset: 0;
+      display: none; 
+      flex-direction: column;
+      z-index: 100;
+      background: #fff;
+    }
+
+    .google-map {
+      flex: 1;
+      width: 100%;
+      border: 0;
+    }
+
+    .map-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(2px);
+      z-index: 8;
+      transition: opacity 0.4s ease;
+    }
+
+    .map-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .nav-card-bottom {
+      background: #fff;
+      padding: 15px 20px 30px;
+      box-shadow: 0 -2px 15px rgba(0,0,0,0.08);
+      position: relative;
+      z-index: 10;
+    }
+
+    .nav-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .nav-stats {
+      font-size: 20px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .nav-stats span {
+      margin-left: 8px;
+      color: #000;
+    }
+
+    .btn-salir {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .arrival-recommendation {
+      background: #f8f8f8;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #555;
+    }
+
+    .arrival-recommendation b { color: #000; font-weight: 800; }
+
+    #successCard {
+      position: absolute;
+      bottom: -100%;
+      left: 0;
+      width: 100%;
+      height: auto;
+      background: white;
+      border-radius: 25px 25px 0 0;
+      padding: 30px 20px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+      transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      z-index: 999;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .success-dot {
+      width: 60px;
+      height: 60px;
+      background: var(--success);
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center; justify-content: center;
+    }
+
+    .success-dot::after {
+      content: '✓'; color: white; font-size: 30px; font-weight: bold;
+    }
+
+    .start-delivery-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+.header-img {
+  width: 100%;
+  height: 150px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+ 
+}
+
+
+
+   .header-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+    .badge-count { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+
+.main-scroll {
+  flex: 1;
+  overflow-y: auto;
+  background: #fff;
+
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+
+  margin-top: -28px;   /* 🔥 clave */
+  padding-top: 25px;   /* compensa espacio */
+
+  position: relative;
+  z-index: 2;
+}
+
+
+
+    .content { padding: 0 20px; }
+    .title-row { display: flex; justify-content: space-between; align-items: center; }
+    .title { font-size: 20px; font-weight: 700; }
+    .address { color: #777; font-size: 14px; margin-bottom: 15px; }
+    
+    .ready-banner { 
+      background: #f5f5f5; 
+      padding: 14px; 
+      border-radius: 8px; 
+      font-size: 14px; 
+      color: #666; 
+      margin-bottom: 20px; 
+      border-left: 4px solid #eee; 
+    }
+    
+    .order-id { font-size: 18px; font-weight: 800; margin-top: 36px; margin-bottom: 10px; }
+
+    .info-box { border-top: 1px solid #f0f0f0; padding-top: 14px; }
+    .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; }
+    .info-row svg { fill: #666; width: 18px; height: 18px; }
+
+    .pedido-confirmado {
+      display: none;
+      font-weight: 700;
+      color: var(--success);
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .check-circle {
+      width: 20px; height: 20px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* --- SLIDER ACTUALIZADO CON MÁSCARA --- */
+    .bottom-section { padding: 10px 20px 30px; background: #fff; border-top: 1px solid #f0f0f0; transition: opacity 0.3s; }
+    .btn { background: var(--accent); color: #fff; border: none; width: 100%; padding:14px; border-radius: 12px; font-size: 16px; font-weight: 700; }
+    
+    .slider-area { display: flex; align-items: center; gap: 12px; margin-top: 15px; }
+    
+    .slider-container { 
+      flex: 1; height: 56px; background: #eee; border-radius: 30px; 
+      position: relative; overflow: hidden; opacity: 0.4; pointer-events: none; 
+      transition: background 0.3s, opacity 0.3s;
+    }
+    
+    .slider-container.enabled { 
+      opacity: 1; 
+      pointer-events: all; 
+      background: var(--accent); 
+    }
+
+    .slider-text {
+      position: absolute; width: 100%; text-align: center; top: 50%; 
+      transform: translateY(-50%); font-weight: 700; font-size: 18px; color: #999; z-index: 1;
+    }
+
+    .slider-container.enabled .slider-text { color: #fff; }
+
+    /* MÁSCARA NARANJA */
+    .slider-mask {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: var(--accent);
+      width: 0; z-index: 2; pointer-events: none;
+    }
+
+    .slider-thumb { 
+      position: absolute; left: 15px; top: 0; width: 50px; height: 56px; 
+      background: transparent; display: flex; align-items: center; 
+      justify-content: center; z-index: 3; cursor: pointer;
+      font-size: 24px; font-weight: 900; color: #999; 
+      letter-spacing: -2px; user-select: none;
+    }
+
+    .slider-container.enabled .slider-thumb { 
+      color: #fff; 
+      background: radial-gradient(circle, rgba(0,0,0,0.15) 0%, transparent 70%);
+    }
+    .loading-dots {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 4;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  opacity: 0.3;
+  animation: dotPulse 1s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+    /* --- CAJAS DE AYUDA Y FEEDBACK --- */
+    .help-card {
+      margin-top: 20px; background: #f9f9f9; border-radius: 15px; padding: 15px;
+      display: flex; align-items: center; gap: 10px; font-size: 14px; color: #666;
+    }
+
+    .feedback-box {
+      margin-top: 10px; border: 1.5px solid #e0e0e0; border-radius: 20px; padding: 18px;
+    }
+    .feedback-title { font-size: 14px; color: #666; margin-bottom: 12px; }
+.feedback-btns {
+  display: flex;
+  justify-content: center;
+  gap: 100px;   /* Mucho más separados */
+  margin-top: 15px;
+}
+
+.f-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 17px;   /* Un poco más grande */
+  color: #222;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.f-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: #bdbdbd;   /* Gris claro */
+  stroke-width: 2;
+}
+
+
+
+.f-btn:active {
+  opacity: 0.6;
+}
+
+
+    .btn-detalles {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #b5b5b5;
+  cursor: pointer;
+}
+
+.btn-detalles:active {
+  opacity: 0.6;
+}
+
+  </style>
+  <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</head>
+<body>
+
+  <div class="container">
+    <div id="setupScreen" style="
+position:absolute;
+inset:0;
+background:#fff;
+z-index:2000;
+display:flex;
+flex-direction:column;
+justify-content:center;
+gap:15px;
+padding:25px;
+">
+
+  <h2 style="margin:0 0 10px 0;">Configurar pedido</h2>
+
+  <input id="inputNombre" placeholder="Nombre del restaurante" style="padding:12px;font-size:16px;">
+  <input id="inputDireccion" placeholder="Dirección" style="padding:12px;font-size:16px;">
+
+  <select id="inputCodigo" style="padding:12px;font-size:16px;">
+    <option value="si">Tiene código</option>
+    <option value="no">No tiene código</option>
+  </select>
+
+  <input id="inputCodigoValor"
+         placeholder="Escribe el código de verificación"
+         style="padding:12px;font-size:16px; display:none;"
+         type="number">
+
+         <input id="inputCodigoPedido"
+       placeholder="Código del pedido (ej: #72499003)"
+       style="padding:12px;font-size:16px;">
+
+<input id="inputNombrePersona"
+       placeholder="Nombre de la persona"
+       style="padding:12px;font-size:16px;">
+
+
+  <input id="inputImagen" type="file" accept="image/*">
+
+  <button id="btnIniciarApp"
+          style="padding:14px;background:#ff6b00;color:white;border:none;border-radius:12px;font-weight:700;">
+    Iniciar app
+  </button>
+
+</div>
+
+    
+    <div id="deliveryState" class="delivery-state">
+      <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15908.139622992!2d-74.1481!3d4.6185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" allowfullscreen="" loading="lazy"></iframe>
+      <div id="mapOverlay" class="map-overlay"></div>
+
+      <div id="successCard">
+        <div class="success-dot"></div>
+        <div class="order-id" id="pedidoInfoSuccess" style="margin:0">#72499003 Esteban Amazo</div>
+        <div id="successDate" style="font-size: 14px; color: #666; margin: 5px 0 15px;"></div>
+        <div style="font-weight: 600; color: var(--success);">Recolección exitosa</div>
+        <button id="startDeliveryBtn" class="start-delivery-btn">Iniciar entrega</button>
+      </div>
+
+      <div class="nav-card-bottom" id="navBottom" style="display:none;">
+        <div class="nav-info-row">
+          <div class="nav-stats">16min <span>3,7km</span></div>
+          <button class="btn-salir" onclick="location.reload()">Salir</button>
+        </div>
+        <div class="arrival-recommendation">
+          Recomendamos llegar antes de <b id="arrivalTime">18:39</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-img">
+      <img id="restImagen" src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1000&auto=format&fit=crop" />
+
+      <div class="badge-count">1/1 ></div>
+    </div>
+
+    <div class="main-scroll">
+      <div class="drag-bar-container"><div class="drag-bar"></div></div>
+      <div class="content">
+        <div class="title-row">
+          <div class="title" id="restNombre">Nikoru Sushi (Kennedy)</div>
+
+          <svg width="20" height="20" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        </div>
+        <div class="address" id="restDireccion">Tv. 72f Bis #39i16, Bogotá</div>
+
+        
+        <div class="ready-banner">
+          <b>La tienda ha confirmado que el pedido está listo para recolectar</b>
+        </div>
+
+        <div class="order-id" id="pedidoInfo">#72499003 Esteban Amazo</div>
+
+        
+        <div class="info-box">
+          <div class="info-row" id="codigoBox">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm3 1h6v2H9V7zm0 4h6v2H9v-2z"/></svg>
+            <span>Código de verificación: <b>8411</b></span>
+          </div>
+        </div>
+        
+        <button id="btnPedido" class="btn">Tengo el pedido</button>
+        <button class="btn-detalles">Detalles del pedido</button>
+
+
+        <div id="pedidoConfirmado" class="pedido-confirmado">
+          <div class="check-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <span>Tengo el pedido</span>
+        </div>
+
+        <div class="help-card">
+           <svg width="20" height="20" viewBox="0 0 24 24" fill="#999"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1 .45-1.75 1.17-2.47l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+           Centro de ayuda
+        </div>
+
+        <div class="feedback-box">
+          <div class="feedback-title">¿Te gustó el servicio de la tienda?</div>
+          <div class="feedback-btns">
+            <div class="f-btn"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2"/></svg> No</div>
+            <div class="f-btn"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v9h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h2"/></svg> Sí</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-section" id="bottomBar">
+      <div class="slider-area">
+        <svg width="24" height="24" viewBox="0 0 24 24" stroke="#333" stroke-width="2" fill="none"><line x1="4" y1="8" x2="20" y2="8"/><circle cx="14" cy="8" r="2"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="9" cy="16" r="2"/></svg>
+        <div class="slider-container" id="slider">
+          <div class="slider-text" id="sliderText">SALIR</div>
+
+<div class="loading-dots" id="loadingDots">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+          <div class="slider-mask" id="mask"></div>
+          <div class="slider-thumb" id="thumb">>></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('btnPedido');
+    const slider = document.getElementById('slider');
+    const thumb = document.getElementById('thumb');
+    const mask = document.getElementById('mask');
+    const deliveryState = document.getElementById('deliveryState');
+    const bottomBar = document.getElementById('bottomBar');
+    const navBottom = document.getElementById('navBottom');
+    const mapOverlay = document.getElementById('mapOverlay');
+    const successCard = document.getElementById('successCard');
+    const successDate = document.getElementById('successDate');
+    const startDeliveryBtn = document.getElementById('startDeliveryBtn');
+    const pedidoConfirmado = document.getElementById('pedidoConfirmado');
+
+    // -------- SETUP INICIAL --------
+
+const inputCodigo = document.getElementById("inputCodigo");
+const inputCodigoValor = document.getElementById("inputCodigoValor");
+const btnIniciarApp = document.getElementById("btnIniciarApp");
+
+inputCodigo.addEventListener("change", () => {
+  if(inputCodigo.value === "si"){
+    inputCodigoValor.style.display = "block";
+  } else {
+    inputCodigoValor.style.display = "none";
+  }
+});
+
+btnIniciarApp.addEventListener("click", () => {
+
+  const nombre = document.getElementById("inputNombre").value.trim();
+  const direccion = document.getElementById("inputDireccion").value.trim();
+  const tieneCodigo = inputCodigo.value;
+  const codigoValor = inputCodigoValor.value.trim();
+  const imagenInput = document.getElementById("inputImagen");
+  let codigoPedido = document.getElementById("inputCodigoPedido").value.trim();
+const nombrePersona = document.getElementById("inputNombrePersona").value.trim();
+
+if(codigoPedido !== "" && !codigoPedido.startsWith("#")){
+  codigoPedido = "#" + codigoPedido;
+}
+
+
+  if(nombre !== ""){
+    document.getElementById("restNombre").textContent = nombre;
+  }
+
+  if(direccion !== ""){
+    document.getElementById("restDireccion").textContent = direccion;
+  }
+
+  if(tieneCodigo === "si"){
+    if(codigoValor !== ""){
+      document.querySelector("#codigoBox b").textContent = codigoValor;
+    }
+  } else {
+    document.getElementById("codigoBox").style.display = "none";
+  }
+
+  if(imagenInput.files[0]){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      document.getElementById("restImagen").src = e.target.result;
+    }
+    reader.readAsDataURL(imagenInput.files[0]);
+  }
+
+  if(codigoPedido !== "" || nombrePersona !== ""){
+  const textoFinal = `${codigoPedido} ${nombrePersona}`;
+  document.getElementById("pedidoInfo").textContent = textoFinal;
+  document.getElementById("pedidoInfoSuccess").textContent = textoFinal;
+}
+
+
+  document.getElementById("setupScreen").style.display = "none";
+});
+
+
+    btn.addEventListener('click', () => {
+      btn.style.display = 'none';
+      pedidoConfirmado.style.display = 'flex';
+      slider.classList.add('enabled'); 
+    });
+
+    let isDragging = false;
+    let startX = 0;
+
+    const startDrag = (e) => {
+      if (!slider.classList.contains('enabled')) return;
+      isDragging = true;
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+      thumb.style.transition = 'none';
+      mask.style.transition = 'none';
+    };
+
+    const moveDrag = (e) => {
+      if (!isDragging) return;
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const walk = x - startX;
+      const max = slider.offsetWidth - thumb.offsetWidth - 10;
+      let pos = Math.max(0, Math.min(walk, max));
+      
+      thumb.style.left = (pos + 15) + 'px';
+      mask.style.width = (pos + 45) + 'px';
+    };
+
+const stopDrag = () => {
+  if (!isDragging) return;
+  isDragging = false;
+
+  const sliderRect = slider.getBoundingClientRect();
+  const thumbRect = thumb.getBoundingClientRect();
+
+  const currentPos = thumb.offsetLeft - 15;
+  const max = slider.offsetWidth - thumb.offsetWidth - 10;
+
+  if (currentPos > max - 30) {
+
+    // Completar barra
+    mask.style.width = '100%';
+    thumb.style.display = 'none';
+
+    // Ocultar texto
+    document.getElementById('sliderText').style.display = 'none';
+
+    // Mostrar loader
+    const loadingDots = document.getElementById('loadingDots');
+    loadingDots.style.display = 'flex';
+
+    // Simular carga 1 segundo
+    setTimeout(() => {
+
+      document.querySelector('.header-img').style.opacity = '0';
+      document.querySelector('.main-scroll').style.opacity = '0';
+      bottomBar.style.opacity = '0';
+
+      setTimeout(() => {
+        deliveryState.style.display = 'flex';
+
+        const now = new Date();
+        successDate.textContent = now.toLocaleDateString('es-CO', {
+          day:'2-digit',
+          month:'short',
+          hour:'2-digit',
+          minute:'2-digit'
+        });
+
+        successCard.style.bottom = '0';
+      }, 300);
+
+    }, 1800);
+
+
+      } else {
+        thumb.style.transition = 'left 0.3s';
+        mask.style.transition = 'width 0.3s';
+        thumb.style.left = '15px';
+        mask.style.width = '0px';
+      }
+    };
+
+    thumb.addEventListener('mousedown', startDrag);
+    thumb.addEventListener('touchstart', startDrag);
+    window.addEventListener('mousemove', moveDrag);
+    window.addEventListener('touchmove', moveDrag);
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('touchend', stopDrag);
+
+    startDeliveryBtn.addEventListener('click', () => {
+      successCard.style.bottom = '-100%';
+      setTimeout(() => {
+        mapOverlay.classList.add('hidden');
+        navBottom.style.display = 'block';
+        const arrival = new Date();
+        arrival.setMinutes(arrival.getMinutes() + 15);
+        document.getElementById('arrivalTime').textContent = arrival.getHours().toString().padStart(2,'0') + ":" + arrival.getMinutes().toString().padStart(2,'0');
+      }, 400);
+    });
+  </script>
+</body>
+</html>
