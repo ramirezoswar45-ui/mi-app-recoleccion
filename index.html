@@ -392,20 +392,22 @@
 
 /* AÑADE esta nueva regla justo debajo de .help-card */
 .phone-icon-box {
-  background: #f4f4f6;    /* Mismo gris que el centro de ayuda */
-  padding: 8px;           /* Espacio para que parezca un cuadrito */
-  border-radius: 10px;    /* Bordes redondeados */
+  background: #f4f4f6;    /* Mismo gris que Centro de Ayuda */
+  width: 42px;            /* Ancho de la cajita */
+  height: 42px;           /* Alto de la cajita */
+  border-radius: 12px;    /* Bordes redondeados */
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;         /* Evita que se aplaste si el nombre es largo */
+  cursor: pointer;
 }
 
 .phone-icon-box svg {
-  fill: #666;             /* Color del icono */
-  width: 18px;            /* Tamaño ajustado */
-  height: 18px;
+  fill: #444;             /* Color del icono un poco más oscuro */
+  width: 22px;            /* El icono se mantiene elegante, no gigante */
+  height: 22px;
 }
-
     .help-card:hover { transform: scale(1.02); }
 
     .feedback-box {
@@ -672,7 +674,7 @@ padding:25px;
 
     <div class="main-scroll">
       <div class="content">
-       <div class="title-row">
+      <div class="title-row">
   <div class="title" id="restNombre">Nikoru Sushi (Kennedy)</div>
 
   <div class="phone-icon-box">
