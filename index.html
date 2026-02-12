@@ -425,6 +425,63 @@
   transform: scale(1.05);
 }
 
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0);
+  z-index: 3000;
+}
+
+/* 🔸 Cuadro un poco más grande y más cuadrado */
+.loader-bars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 55px;
+  height: 40px;
+  background: white;
+  border-radius: 10px; /* redondeadas pero más cuadradas */
+  box-shadow: 0 1px 8px rgba(0,0,0,0.12);
+}
+
+/* 🔸 Rayitas diagonales animadas */
+.loader-bars span {
+  width: 4px;
+  height: 14px;
+  border-radius: 4px;
+  transform-origin: center;
+  animation: pulseDiagonal 0.8s infinite ease-in-out alternate;
+}
+
+.loader-bars span:first-child {
+  background: #ff6b00; /* naranja */
+  animation-delay: 0s;
+  transform: rotate(-25deg);
+}
+
+.loader-bars span:last-child {
+  background: #5fd0b5; /* verde-agua */
+  animation-delay: 0.4s;
+  transform: rotate(-25deg);
+}
+
+/* animación de las barritas diagonales */
+@keyframes pulseDiagonal {
+  0% {
+    transform: rotate(-25deg) scaleY(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: rotate(-25deg) scaleY(1.5);
+    opacity: 1;
+  }
+}
+
+
   </style>
 </head>
 
@@ -713,9 +770,14 @@ const stopDrag = () => {
     // Mostrar loader
     const loadingDots = document.getElementById('loadingDots');
     loadingDots.style.display = 'flex';
+// Mostrar animación central durante el retraso
+const loadingOverlay = document.getElementById('loadingOverlay');
+loadingOverlay.style.display = 'flex';
 
     // Simular carga 1 segundo
     setTimeout(() => {
+      loadingOverlay.style.display = 'none';
+
 
       document.querySelector('.header-img').style.opacity = '0';
       document.querySelector('.main-scroll').style.opacity = '0';
@@ -777,7 +839,15 @@ const stopDrag = () => {
         document.getElementById('arrivalTime').textContent = arrival.getHours().toString().padStart(2,'0') + ":" + arrival.getMinutes().toString().padStart(2,'0');
       }, 400);
     });
+
+
 </script>
+<div id="loadingOverlay">
+  <div class="loader-bars">
+    <span></span>
+    <span></span>
+  </div>
+</div>
 
 </body>
 </html>
