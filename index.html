@@ -375,9 +375,10 @@
     }
 
     
-    .help-card {
+ /* Busca .help-card y reemplázalo por esto: */
+.help-card {
   margin-top: 35px;
-  background: #f4f4f6; /* más gris y visible */
+  background: #f4f4f6; 
   border-radius: 15px;
   padding: 15px;
   display: flex;
@@ -386,7 +387,24 @@
   font-size: 14px;
   color: #444;
   transition: transform 0.3s ease;
- }
+  font-weight: 800; /* <--- Esto le da la "gordura" al texto */
+}
+
+/* AÑADE esta nueva regla justo debajo de .help-card */
+.phone-icon-box {
+  background: #f4f4f6;    /* Mismo gris que el centro de ayuda */
+  padding: 8px;           /* Espacio para que parezca un cuadrito */
+  border-radius: 10px;    /* Bordes redondeados */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-icon-box svg {
+  fill: #666;             /* Color del icono */
+  width: 18px;            /* Tamaño ajustado */
+  height: 18px;
+}
 
     .help-card:hover { transform: scale(1.02); }
 
@@ -654,11 +672,15 @@ padding:25px;
 
     <div class="main-scroll">
       <div class="content">
-        <div class="title-row">
-          <div class="title" id="restNombre">Nikoru Sushi (Kennedy)</div>
+       <div class="title-row">
+  <div class="title" id="restNombre">Nikoru Sushi (Kennedy)</div>
 
-          <svg width="20" height="20" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        </div>
+  <div class="phone-icon-box">
+    <svg viewBox="0 0 24 24">
+      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    </svg>
+  </div>
+</div>
         <div class="address" id="restDireccion">Tv. 72f Bis #39i16, Bogotá</div>
 
         
