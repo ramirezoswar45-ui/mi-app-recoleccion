@@ -36,7 +36,8 @@
       overflow: hidden;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
       border-radius: 12px;
-      transition: all 0.4s ease;
+        z-index: 2;
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* --- PÁGINA DE NAVEGACIÓN --- */
@@ -178,7 +179,8 @@
       position: relative;
       z-index: 1;
       border-radius: 0 0 18px 18px;
-      transition: all 0.4s ease;
+      transition: opacity 0.12s ease-out;
+
     }
 
     .header-img img {
@@ -201,18 +203,19 @@
       font-size: 11px;
     }
 
-    .main-scroll {
-      flex: 1;
-      overflow-y: auto;
-      background: #fff;
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      margin-top: -6px;
-      padding-top: 25px;
-      position: relative;
-      z-index: 2;
-      transition: opacity 0.4s ease;
-    }
+.main-scroll {
+  flex: 1;
+  overflow-y: auto;
+  background: #fff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  margin-top: -6px;
+  padding: 25px 0 120px; /* 🔸 más espacio inferior para no quedar tapado */
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.4s ease;
+}
+
 
     .content { padding: 0 20px; }
     .title-row { display: flex; justify-content: space-between; align-items: center; }
@@ -252,12 +255,21 @@
 }
 
 
-    .bottom-section { 
-      padding: 10px 20px 30px; 
-      background: #fff; 
-      border-top: 1px solid #f0f0f0; 
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
+   /* 🔹 Sección inferior fija (no se mueve al arrastrar) */
+.bottom-section { 
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 20px 30px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  z-index: 5;
+  transition: opacity 0.2s ease;
+}
+
 
     .btn { 
       background: var(--accent); 
@@ -508,17 +520,19 @@
 
 /* 🔸 Barrita indicadora para arrastrar */
 .drag-handle {
-  width: 42px;
+  width: 44px;
   height: 5px;
-  background: #d6d6d6;
-  border-radius: 3px;
-  margin: 8px auto 0;
+  background: #d2d2d2;
+  border-radius: 4px;
+  margin: 10px auto 12px;
   opacity: 0.9;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 
 .drag-handle:active {
   opacity: 0.6;
+  transform: scale(0.95);
 }
 
 
@@ -611,7 +625,6 @@ padding:25px;
 
 
     <div class="main-scroll">
-      <div class="drag-bar-container"><div class="drag-bar"></div></div>
       <div class="content">
         <div class="title-row">
           <div class="title" id="restNombre">Nikoru Sushi (Kennedy)</div>
@@ -891,7 +904,7 @@ loadingOverlay.style.display = 'flex';
       }, 400);
     });
 // ---- EFECTO DE ARRASTRE ELÁSTICO ----
-const container = document.querySelector('.container');
+const container = document.querySelector('.main-scroll');
 const bgMap = document.getElementById('backgroundMap');
 const headerImg = document.querySelector('.header-img');
 
@@ -931,15 +944,16 @@ document.addEventListener('touchend', () => {
   if (!isDraggingPage) return;
   isDraggingPage = false;
 
-  // volver suave
-  container.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
-  container.style.transform = 'translateY(0)';
-  bgMap.style.opacity = 0;
-  headerImg.style.opacity = 1;
+// volver rápido
+container.style.transition = 'transform 0.18s cubic-bezier(0.4, 0, 0.2, 1)';
+container.style.transform = 'translateY(0)';
+bgMap.style.opacity = 0;
+headerImg.style.opacity = 1;
 
-  setTimeout(() => {
-    container.style.transition = '';
-  }, 400);
+setTimeout(() => {
+  container.style.transition = '';
+}, 180);
+
 });
 
 
