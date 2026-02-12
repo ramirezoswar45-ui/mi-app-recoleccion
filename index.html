@@ -447,51 +447,51 @@
   z-index: 3000;
 }
 
-/* 🔸 Cuadro más grande y redondeado */
 .loader-bars {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 85px;   /* más grande */
-  height: 55px;
+  gap: 3.5px; /* 🔸 más juntas */
+  width: 65px;  /* 🔸 más pequeño */
+  height: 42px; /* 🔸 más compacto */
   background: white;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* 🔸 Rayitas diagonales más pequeñas */
 .loader-bars span {
-  width: 3px;      /* más delgadas */
-  height: 10px;    /* más cortas */
-  border-radius: 3px;
+  width: 2.5px;   /* 🔸 delgadas */
+  height: 8px;    /* 🔸 más cortas */
+  border-radius: 2px;
   transform-origin: center;
-  animation: pulseDiagonal 0.8s infinite ease-in-out alternate;
+  animation: pulseDiagonal 0.65s infinite ease-in-out alternate;
 }
 
+/* 🔸 Inclinadas en diagonal hacia // */
 .loader-bars span:first-child {
-  background: #ff6b00; /* naranja */
+  background: #ff6b00;
   animation-delay: 0s;
-  transform: rotate(-25deg);
+  transform: rotate(25deg);
 }
 
 .loader-bars span:last-child {
-  background: #5fd0b5; /* verde-agua */
-  animation-delay: 0.4s;
-  transform: rotate(-25deg);
+  background: #5fd0b5;
+  animation-delay: 0.35s;
+  transform: rotate(25deg);
 }
 
-/* animación con inclinación */
+/* 🔸 Animación coherente con la nueva dirección */
 @keyframes pulseDiagonal {
   0% {
-    transform: rotate(-25deg) scaleY(1);
+    transform: rotate(25deg) scaleY(1);
     opacity: 0.6;
   }
   100% {
-    transform: rotate(-25deg) scaleY(1.5);
+    transform: rotate(25deg) scaleY(1.5);
     opacity: 1;
   }
 }
+
 
 /* 🔹 Fondo tipo mapa (solo visible cuando arrastras hacia abajo) */
 #backgroundMap {
