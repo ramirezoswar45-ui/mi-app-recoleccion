@@ -1,9 +1,6 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ff6b00">
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Pedido - Recolección</title>
@@ -18,28 +15,29 @@
     }
 
     body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100dvh; /* 👈 clave */
-  display: flex;
-  justify-content: center;
-}
-
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 0.4s ease;
+    }
 
     .container {
-  width: 100%;
-  max-width: 420px;
-  background: #fff;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-
-
-}
-
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      transition: all 0.4s ease;
+    }
 
     /* --- PÁGINA DE NAVEGACIÓN --- */
     .delivery-state {
@@ -49,7 +47,10 @@
       flex-direction: column;
       z-index: 100;
       background: #fff;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    .delivery-state.active { display: flex; opacity: 1; }
 
     .google-map {
       flex: 1;
@@ -61,11 +62,10 @@
       position: absolute;
       inset: 0;
       background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(3px);
       z-index: 8;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.5s ease;
     }
-
     .map-overlay.hidden {
       opacity: 0;
       pointer-events: none;
@@ -77,6 +77,14 @@
       box-shadow: 0 -2px 15px rgba(0,0,0,0.08);
       position: relative;
       z-index: 10;
+      border-radius: 16px 16px 0 0;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+    .nav-card-bottom.active {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     .nav-info-row {
@@ -92,11 +100,6 @@
       color: #000;
     }
 
-    .nav-stats span {
-      margin-left: 8px;
-      color: #000;
-    }
-
     .btn-salir {
       background: #fff;
       border: 1px solid #ddd;
@@ -104,7 +107,10 @@
       border-radius: 20px;
       font-size: 14px;
       font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
+    .btn-salir:hover { background: #f5f5f5; }
 
     .arrival-recommendation {
       background: #f8f8f8;
@@ -113,7 +119,6 @@
       font-size: 15px;
       color: #555;
     }
-
     .arrival-recommendation b { color: #000; font-weight: 800; }
 
     #successCard {
@@ -121,12 +126,11 @@
       bottom: -100%;
       left: 0;
       width: 100%;
-      height: auto;
       background: white;
       border-radius: 25px 25px 0 0;
       padding: 30px 20px;
       box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
-      transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
       z-index: 999;
       box-sizing: border-box;
       text-align: center;
@@ -140,10 +144,15 @@
       margin: 0 auto 15px;
       display: flex;
       align-items: center; justify-content: center;
+      box-shadow: 0 0 15px rgba(22,163,74,0.4);
+      animation: popIn 0.4s ease forwards;
     }
-
     .success-dot::after {
       content: '✓'; color: white; font-size: 30px; font-weight: bold;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .start-delivery-btn {
@@ -156,63 +165,65 @@
       font-weight: 700;
       font-size: 16px;
       margin-top: 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s;
     }
-.header-img {
-  width: 100%;
-  height: 230px;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
- 
-}
+    .start-delivery-btn:active { transform: scale(0.97); }
+    .start-delivery-btn:hover { background: #ff812d; }
 
+    .header-img {
+      width: 100%;
+      height: 190px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      border-radius: 0 0 18px 18px;
+      transition: all 0.4s ease;
+    }
 
+    .header-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .header-img:hover img { transform: scale(1.03); }
 
-   .header-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+    .badge-count {
+      position: absolute;
+      bottom: 15px;
+      right: 12px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
 
-    .badge-count { position: absolute; bottom: 30px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-
-.main-scroll {
-  flex: 1;
-  overflow-y: auto;
-  background: #fff;
-
-  border-top-left-radius: 28px;
-  border-top-right-radius: 28px;
-
-  margin-top: -23px;   /* 🔥 clave */
-  padding-top: 25px;   /* compensa espacio */
-
-  position: relative;
-  z-index: 2;
-}
-
-
+    .main-scroll {
+      flex: 1;
+      overflow-y: auto;
+      background: #fff;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      margin-top: -6px;
+      padding-top: 25px;
+      position: relative;
+      z-index: 2;
+      transition: opacity 0.4s ease;
+    }
 
     .content { padding: 0 20px; }
     .title-row { display: flex; justify-content: space-between; align-items: center; }
     .title { font-size: 20px; font-weight: 700; }
     .address { color: #777; font-size: 14px; margin-bottom: 15px; }
-    
-    .ready-banner { 
-      background: #f5f5f5; 
-      padding: 14px; 
-      border-radius: 8px; 
-      font-size: 14px; 
-      color: #666; 
-      margin-bottom: 20px; 
-      border-left: 4px solid #eee; 
-    }
-    
+    .ready-banner { background: #f5f5f5; padding: 14px; border-radius: 8px; font-size: 14px; color: #666; margin-bottom: 20px; border-left: 4px solid #eee; }
     .order-id { font-size: 18px; font-weight: 800; margin-top: 36px; margin-bottom: 10px; }
 
     .info-box { border-top: 1px solid #f0f0f0; padding-top: 14px; }
-    .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; }
+    .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; transition: transform 0.2s ease; }
+    .info-row:hover { transform: translateX(2px); }
     .info-row svg { fill: #666; width: 18px; height: 18px; }
 
     .pedido-confirmado {
@@ -232,36 +243,49 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* --- SLIDER ACTUALIZADO CON MÁSCARA --- */
-    .bottom-section { padding: 10px 20px 30px; background: #fff; border-top: 1px solid #f0f0f0; transition: opacity 0.3s; }
-    .btn { background: var(--accent); color: #fff; border: none; width: 100%; padding:14px; border-radius: 12px; font-size: 16px; font-weight: 700; }
-    
+    .bottom-section { 
+      padding: 10px 20px 30px; 
+      background: #fff; 
+      border-top: 1px solid #f0f0f0; 
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .btn { 
+      background: var(--accent); 
+      color: #fff; 
+      border: none; 
+      width: 100%; 
+      padding:14px; 
+      border-radius: 12px; 
+      font-size: 16px; 
+      font-weight: 700;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+    .btn:active { transform: scale(0.97); }
+
     .slider-area { display: flex; align-items: center; gap: 12px; margin-top: 15px; }
-    
+
     .slider-container { 
       flex: 1; height: 56px; background: #eee; border-radius: 30px; 
       position: relative; overflow: hidden; opacity: 0.4; pointer-events: none; 
-      transition: background 0.3s, opacity 0.3s;
+      transition: all 0.3s ease;
     }
-    
-    .slider-container.enabled { 
-      opacity: 1; 
-      pointer-events: all; 
-      background: var(--accent); 
-    }
+    .slider-container.enabled { opacity: 1; pointer-events: all; background: var(--accent); }
 
     .slider-text {
       position: absolute; width: 100%; text-align: center; top: 50%; 
       transform: translateY(-50%); font-weight: 700; font-size: 18px; color: #999; z-index: 1;
+      transition: opacity 0.3s ease;
     }
-
     .slider-container.enabled .slider-text { color: #fff; }
 
-    /* MÁSCARA NARANJA */
     .slider-mask {
       position: absolute; left: 0; top: 0; height: 100%;
       background: var(--accent);
-      width: 0; z-index: 2; pointer-events: none;
+      width: 0; z-index: 2;
+      pointer-events: none;
+      transition: width 0.2s ease;
     }
 
     .slider-thumb { 
@@ -270,115 +294,97 @@
       justify-content: center; z-index: 3; cursor: pointer;
       font-size: 24px; font-weight: 900; color: #999; 
       letter-spacing: -2px; user-select: none;
+      transition: color 0.3s ease, transform 0.2s ease;
     }
+    .slider-thumb:active { transform: scale(0.9); }
+    .slider-container.enabled .slider-thumb { color: #fff; }
 
-    .slider-container.enabled .slider-thumb { 
-      color: #fff; 
-      background: radial-gradient(circle, rgba(0,0,0,0.15) 0%, transparent 70%);
-    }
     .loading-dots {
-  position: absolute;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  z-index: 4;
-}
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      z-index: 4;
+    }
 
-.loading-dots span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.6);
-  opacity: 0.3;
-  animation: dotPulse 1s infinite ease-in-out;
-}
+    .loading-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      opacity: 0.3;
+      animation: dotPulse 1s infinite ease-in-out;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 
-.loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
-}
+    @keyframes dotPulse {
+      0%,100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
 
-.loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes dotPulse {
-  0% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.3); }
-  100% { opacity: 0.3; transform: scale(1); }
-}
-
-    /* --- CAJAS DE AYUDA Y FEEDBACK --- */
     .help-card {
       margin-top: 20px; background: #f9f9f9; border-radius: 15px; padding: 15px;
       display: flex; align-items: center; gap: 10px; font-size: 14px; color: #666;
+      transition: transform 0.3s ease;
     }
+    .help-card:hover { transform: scale(1.02); }
 
     .feedback-box {
       margin-top: 10px; border: 1.5px solid #e0e0e0; border-radius: 20px; padding: 18px;
+      transition: border 0.3s ease;
     }
+    .feedback-box:hover { border-color: #ccc; }
+
     .feedback-title { font-size: 14px; color: #666; margin-bottom: 12px; }
-.feedback-btns {
-  display: flex;
-  justify-content: center;
-  gap: 100px;   /* Mucho más separados */
-  margin-top: 15px;
-}
 
-.f-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 500;
-  font-size: 17px;   /* Un poco más grande */
-  color: #222;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-}
+    .feedback-btns {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+      margin-top: 15px;
+    }
 
-.f-btn svg {
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: #bdbdbd;   /* Gris claro */
-  stroke-width: 2;
-}
+    .f-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 17px;
+      color: #222;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .f-btn:active { transform: scale(0.9); opacity: 0.7; }
 
-
-
-.f-btn:active {
-  opacity: 0.6;
-}
-
+    .f-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: #bdbdbd;
+      stroke-width: 2;
+    }
 
     .btn-detalles {
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #b5b5b5;
-  cursor: pointer;
-}
-
-.btn-detalles:active {
-  opacity: 0.6;
-}
-
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #b5b5b5;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .btn-detalles:hover { opacity: 0.8; }
   </style>
-  <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
-
 </head>
-<body>
 
-  <div class="container">
+<body>
+ <div class="container">
     <div id="setupScreen" style="
 position:absolute;
 inset:0;
@@ -522,8 +528,8 @@ padding:25px;
     </div>
   </div>
 
-  <script>
-    const btn = document.getElementById('btnPedido');
+<script>
+  const btn = document.getElementById('btnPedido');
     const slider = document.getElementById('slider');
     const thumb = document.getElementById('thumb');
     const mask = document.getElementById('mask');
@@ -659,7 +665,8 @@ const stopDrag = () => {
       bottomBar.style.opacity = '0';
 
       setTimeout(() => {
-        deliveryState.style.display = 'flex';
+        deliveryState.classList.add('active');
+
 
         const now = new Date();
         successDate.textContent = now.toLocaleDateString('es-CO', {
@@ -700,6 +707,7 @@ const stopDrag = () => {
         document.getElementById('arrivalTime').textContent = arrival.getHours().toString().padStart(2,'0') + ":" + arrival.getMinutes().toString().padStart(2,'0');
       }, 400);
     });
-  </script>
+</script>
+
 </body>
 </html>
