@@ -481,11 +481,29 @@
   }
 }
 
+/* 🔹 Fondo tipo mapa (solo visible cuando arrastras) */
+#backgroundMap {
+  position: fixed;
+  inset: 0;
+  background: url("https://maps.googleapis.com/maps/api/staticmap?center=4.6185,-74.1481&zoom=13&size=800x800&maptype=roadmap") center/cover no-repeat;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+/* Contenedor principal encima */
+.container {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.25s ease;
+}
+
 
   </style>
 </head>
 
 <body>
+  <div id="backgroundMap"></div>
  <div class="container">
     <div id="setupScreen" style="
 position:absolute;
@@ -848,6 +866,54 @@ loadingOverlay.style.display = 'flex';
         document.getElementById('arrivalTime').textContent = arrival.getHours().toString().padStart(2,'0') + ":" + arrival.getMinutes().toString().padStart(2,'0');
       }, 400);
     });
+
+   // ---- EFECTO DE ARRASTRE ELÁSTICO ----
+const container = document.querySelector('.container');
+const bgMap = document.getElementById('backgroundMap');
+
+let startY = 0;
+let currentY = 0;
+let isDraggingPage = false;
+
+document.addEventListener('touchstart', (e) => {
+  if (deliveryState.classList.contains('active')) return; // solo en vista principal
+  startY = e.touches[0].clientY;
+  isDraggingPage = true;
+});
+
+document.addEventListener('touchmove', (e) => {
+  if (!isDraggingPage) return;
+  currentY = e.touches[0].clientY - startY;
+
+  // Si arrastra hacia abajo (mostrar mapa)
+  if (currentY > 0) {
+    const move = Math.min(currentY * 0.4, 120); // límite de movimiento
+    container.style.transform = `translateY(${move}px)`;
+    bgMap.style.opacity = Math.min(0.7, move / 120);
+  }
+
+  // Si arrastra hacia arriba (ocultar imagen)
+  else if (currentY < 0) {
+    const move = Math.max(currentY * 0.3, -100);
+    container.style.transform = `translateY(${move}px)`;
+    bgMap.style.opacity = 0;
+  }
+});
+
+document.addEventListener('touchend', () => {
+  if (!isDraggingPage) return;
+  isDraggingPage = false;
+
+  // volver suavemente a su lugar
+  container.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
+  container.style.transform = 'translateY(0)';
+  bgMap.style.opacity = 0;
+
+  setTimeout(() => {
+    container.style.transition = '';
+  }, 400);
+});
+
 
 
 </script>
