@@ -675,13 +675,26 @@ padding:25px;
       <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15908.139622992!2d-74.1481!3d4.6185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" allowfullscreen="" loading="lazy"></iframe>
       <div id="mapOverlay" class="map-overlay"></div>
 
-      <div id="successCard">
-        <div class="success-dot"></div>
-        <div class="order-id" id="pedidoInfoSuccess" style="margin:0">#72499003 Esteban Amazo</div>
-        <div id="successDate" style="font-size: 14px; color: #666; margin: 5px 0 15px;"></div>
-        <div style="font-weight: 600; color: var(--success);">Recolección exitosa</div>
-        <button id="startDeliveryBtn" class="start-delivery-btn">Iniciar entrega</button>
-      </div>
+<div id="successCard">
+  <div class="success-dot">
+    <div class="success-dot-bg"></div>
+    <svg width="80" height="80" viewBox="0 0 52 52">
+      <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
+  </div>
+
+  <div class="order-id" id="pedidoInfoSuccess" style="margin:0">#72499003 Esteban Amazo</div>
+  <div id="successDate" style="font-size: 14px; color: #000; margin: 5px 0 15px; font-weight: 800;"></div>
+  
+  <div style="color: #000; font-weight: 400; font-size: 16px; margin-bottom: 2px;">Recolección exitosa</div>
+  
+  <div style="color: #000; font-weight: 400; font-size: 16px;">
+    Muéstrale esta página a <span id="nombreRestExito" style="font-weight: 800;"></span>
+  </div>
+
+  <button id="startDeliveryBtn" class="start-delivery-btn">Iniciar entrega</button>
+</div>
 
       <div class="nav-card-bottom" id="navBottom" style="display:none;">
         <div class="nav-info-row">
@@ -825,7 +838,12 @@ const nombrePersona = document.getElementById("inputNombrePersona").value.trim()
 if(codigoPedido !== "" && !codigoPedido.startsWith("#")){
   codigoPedido = "#" + codigoPedido;
 }
-
+// Añade esto dentro del evento del botón Iniciar App
+if(nombre !== ""){
+    document.getElementById("restNombre").textContent = nombre;
+    // Esta línea nueva pone el nombre en la tarjeta de éxito:
+    document.getElementById("nombreRestExito").textContent = nombre; 
+}
 
   if(nombre !== ""){
     document.getElementById("restNombre").textContent = nombre;
