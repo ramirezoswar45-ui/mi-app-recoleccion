@@ -298,15 +298,15 @@
   align-items: center; 
   gap: 12px; 
   margin-top: 15px; 
-  padding: 0 15px; /* <--- Menos espacio a los lados = Barra más ancha */
+  padding: 0 12px; /* Un poco más ancha que antes */
 }
 
-    .slider-container { 
+.slider-container { 
   flex: 1; 
   height: 60px; 
   background: #eee; 
-  /* --- CAMBIO A FORMA MÁS CUADRADA --- */
-  border-radius: 12px; /* <--- Antes era 30px. Ahora es más cuadrada */
+  /* --- AJUSTE DE CURVATURA --- */
+  border-radius: 20px; 
   position: relative; 
   overflow: hidden; 
   opacity: 0.4; 
@@ -350,8 +350,8 @@
   z-index: 2;
   pointer-events: none;
   transition: width 0.2s ease;
-  /* --- COINCIDIR CON LA FORMA DEL CONTENEDOR --- */
-  border-radius: 12px; 
+  /* --- MISMO RADIO QUE EL CONTENEDOR --- */
+  border-radius: 20px; 
 }
 
     .slider-thumb { 
