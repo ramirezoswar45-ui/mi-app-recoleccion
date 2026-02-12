@@ -293,8 +293,14 @@
       cursor: pointer;
     }
     .btn:active { transform: scale(0.97); }
-
-    .slider-area { display: flex; align-items: center; gap: 12px; margin-top: 15px; }
+.slider-area { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  margin-top: 15px; 
+  /* --- CAMBIOS PARA REDUCIR EL ANCHO --- */
+  padding: 0 30px; /* Añade espacio a los lados para que la barra sea más corta */
+}
 
     .slider-container { 
       flex: 1; height: 60px; background: #eee; border-radius: 30px; 
