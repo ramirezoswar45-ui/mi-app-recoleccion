@@ -481,7 +481,7 @@
   }
 }
 
-/* 🔹 Fondo tipo mapa (solo visible cuando arrastras) */
+/* 🔹 Fondo tipo mapa (solo visible cuando arrastras hacia abajo) */
 #backgroundMap {
   position: fixed;
   inset: 0;
@@ -491,11 +491,34 @@
   z-index: 0;
 }
 
-/* Contenedor principal encima */
+/* 🔹 Imagen del restaurante (no se mueve, solo cambia opacidad) */
+.header-img {
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.25s ease;
+}
+
+/* 🔹 Contenedor principal se mueve completo */
 .container {
   position: relative;
   z-index: 2;
   transition: transform 0.25s ease;
+  border-radius: 12px;
+}
+
+/* 🔸 Barrita indicadora para arrastrar */
+.drag-handle {
+  width: 42px;
+  height: 5px;
+  background: #d6d6d6;
+  border-radius: 3px;
+  margin: 8px auto 0;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.drag-handle:active {
+  opacity: 0.6;
 }
 
 
@@ -584,6 +607,7 @@ padding:25px;
   <img id="restImagen" src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1000&auto=format&fit=crop" />
   <div class="badge-count">1/1 ></div>
 </div>
+<div class="drag-handle"></div>
 
 
     <div class="main-scroll">
@@ -866,17 +890,17 @@ loadingOverlay.style.display = 'flex';
         document.getElementById('arrivalTime').textContent = arrival.getHours().toString().padStart(2,'0') + ":" + arrival.getMinutes().toString().padStart(2,'0');
       }, 400);
     });
-
-   // ---- EFECTO DE ARRASTRE ELÁSTICO ----
+// ---- EFECTO DE ARRASTRE ELÁSTICO ----
 const container = document.querySelector('.container');
 const bgMap = document.getElementById('backgroundMap');
+const headerImg = document.querySelector('.header-img');
 
 let startY = 0;
 let currentY = 0;
 let isDraggingPage = false;
 
 document.addEventListener('touchstart', (e) => {
-  if (deliveryState.classList.contains('active')) return; // solo en vista principal
+  if (deliveryState.classList.contains('active')) return; // solo vista principal
   startY = e.touches[0].clientY;
   isDraggingPage = true;
 });
@@ -885,16 +909,19 @@ document.addEventListener('touchmove', (e) => {
   if (!isDraggingPage) return;
   currentY = e.touches[0].clientY - startY;
 
-  // Si arrastra hacia abajo (mostrar mapa)
+  // 🔸 Si arrastra hacia abajo → mostrar mapa
   if (currentY > 0) {
-    const move = Math.min(currentY * 0.4, 120); // límite de movimiento
+    const move = Math.min(currentY * 0.4, 120);
     container.style.transform = `translateY(${move}px)`;
     bgMap.style.opacity = Math.min(0.7, move / 120);
+    headerImg.style.opacity = 1; // imagen visible
   }
 
-  // Si arrastra hacia arriba (ocultar imagen)
+  // 🔸 Si arrastra hacia arriba → opacar imagen (sin moverla)
   else if (currentY < 0) {
-    const move = Math.max(currentY * 0.3, -100);
+    const opacity = Math.max(0, 1 + currentY / 120); // opaca poco a poco
+    headerImg.style.opacity = opacity.toFixed(2);
+    const move = Math.max(currentY * 0.25, -80); // contenido se mueve
     container.style.transform = `translateY(${move}px)`;
     bgMap.style.opacity = 0;
   }
@@ -904,10 +931,11 @@ document.addEventListener('touchend', () => {
   if (!isDraggingPage) return;
   isDraggingPage = false;
 
-  // volver suavemente a su lugar
+  // volver suave
   container.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)';
   container.style.transform = 'translateY(0)';
   bgMap.style.opacity = 0;
+  headerImg.style.opacity = 1;
 
   setTimeout(() => {
     container.style.transition = '';
