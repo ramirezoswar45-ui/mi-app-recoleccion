@@ -293,20 +293,28 @@
       cursor: pointer;
     }
     .btn:active { transform: scale(0.97); }
+
+    .slider-area > svg {
+  width: 28px;      /* Aumentado para que no se vea pequeño al lado de la barra */
+  height: 28px;
+  stroke: #444; 
+  stroke-width: 2.5px; /* Un poco más de grosor para que resalte */
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
 .slider-area { 
   display: flex; 
   align-items: center; 
-  gap: 12px; 
+  gap: 15px; 
   margin-top: 15px; 
-  padding: 0 12px; /* Un poco más ancha que antes */
+  padding: 0 10px; /* Reducido el margen lateral para que sea más ancha */
 }
-
 .slider-container { 
   flex: 1; 
   height: 60px; 
   background: #eee; 
-  /* --- AJUSTE DE CURVATURA --- */
-  border-radius: 20px; 
+  border-radius: 20px; /* Esquinas redondeadas modernas, no círculos */
   position: relative; 
   overflow: hidden; 
   opacity: 0.4; 
@@ -350,18 +358,28 @@
   z-index: 2;
   pointer-events: none;
   transition: width 0.2s ease;
-  /* --- MISMO RADIO QUE EL CONTENEDOR --- */
-  border-radius: 20px; 
+  border-radius: 20px; /* Debe coincidir con el contenedor */
 }
 
-    .slider-thumb { 
-      position: absolute; left: 15px; top: 0; width: 50px; height: 56px; 
-      background: transparent; display: flex; align-items: center; 
-      justify-content: center; z-index: 3; cursor: pointer;
-      font-size: 24px; font-weight: 900; color: #999; 
-      letter-spacing: -2px; user-select: none;
-      transition: color 0.3s ease, transform 0.2s ease;
-    }
+   .slider-thumb { 
+  position: absolute; 
+  left: 15px; 
+  top: 0; 
+  width: 50px; 
+  height: 60px; /* Ajustado a la altura total */
+  background: transparent; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 3; 
+  cursor: pointer;
+  font-size: 26px; /* Flechitas un poco más grandes */
+  font-weight: 900; 
+  color: #999; 
+  letter-spacing: -2px; 
+  user-select: none;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
     .slider-thumb:active { transform: scale(0.9); }
     .slider-container.enabled .slider-thumb { color: #fff; }
 
