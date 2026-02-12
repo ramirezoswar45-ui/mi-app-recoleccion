@@ -720,11 +720,20 @@ if(codigoPedido !== "" && !codigoPedido.startsWith("#")){
 });
 
 
-    btn.addEventListener('click', () => {
-      btn.style.display = 'none';
-      pedidoConfirmado.style.display = 'flex';
-      slider.classList.add('enabled'); 
-    });
+  btn.addEventListener('click', () => {
+  btn.style.display = 'none';
+
+  // 🔸 Mostrar el loader por 1s
+  loadingOverlay.style.display = 'flex';
+
+  setTimeout(() => {
+    // 🔸 Ocultar loader y mostrar texto verde
+    loadingOverlay.style.display = 'none';
+    pedidoConfirmado.style.display = 'flex';
+    slider.classList.add('enabled'); 
+  }, 400);
+});
+
 
     let isDragging = false;
     let startX = 0;
