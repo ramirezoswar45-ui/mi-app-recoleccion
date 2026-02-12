@@ -303,11 +303,30 @@
     }
     .slider-container.enabled { opacity: 1; pointer-events: all; background: var(--accent); }
 
-    .slider-text {
-      position: absolute; width: 100%; text-align: center; top: 50%; 
-      transform: translateY(-50%); font-weight: 700; font-size: 18px; color: #999; z-index: 1;
-      transition: opacity 0.3s ease;
-    }
+    /* Estado base del texto (cuando el slider está desactivado) */
+.slider-text {
+  position: absolute; 
+  width: 100%; 
+  text-align: center; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  
+  /* --- MEJORAS DE "GORDURA" Y COLOR --- */
+  font-weight: 900;           /* El máximo grosor disponible */
+  font-size: 20px;           /* Un poco más grande para que destaque */
+  color: rgba(255, 255, 255, 0.5); /* Blanco semi-transparente cuando está apagado */
+  letter-spacing: 1px;       /* Espaciado para que sea más legible */
+  text-transform: uppercase; /* Asegura que esté en mayúsculas */
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+/* Estado cuando el slider se habilita (slider.enabled) */
+.slider-container.enabled .slider-text {
+  color: #ffffff;            /* Blanco puro e intenso */
+  opacity: 1;
+  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); /* Sutil sombra para dar relieve */
+}
     .slider-container.enabled .slider-text { color: #fff; }
 
     .slider-mask {
