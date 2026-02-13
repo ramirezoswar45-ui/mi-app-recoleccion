@@ -653,13 +653,12 @@
   color: #333;
   font-weight: 700;
 }
-
-/* 🔹 Cuadro alrededor del pedido y código *//* 🔹 Ajuste del cuadro pedido-card */
+/* 🔹 Cuadro alrededor del pedido y código */
 .pedido-card {
   background: #fff;
   border: 1.2px solid #e0e0e0;
   border-radius: 16px;
-  padding: 17px 20px 18px 20px;  /* Reducimos padding superior para acercar al nombre */
+  padding: 14px 20px 18px 20px; /* 🔸 equilibrio: ni muy pegado ni muy lejos */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -669,17 +668,17 @@
 
 /* 🔹 Pedido info sin línea separadora */
 .order-id {
-  margin: 0;          /* Quitamos margen extra si lo había */
-  padding: 10;         /* Ajustamos padding */
-  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  font-weight: 800;
 }
 
-/* 🔹 Info-box (código) */
+/* 🔹 Info-box (código) sin bordes ni espacios extra */
 .info-box {
-  padding: 0;         /* Quitamos padding extra para que no genere línea falsa */
-  margin: 0;
-  border: none;       /* Eliminamos cualquier borde que aparezca */
-  gap: 0;
+  border: none !important; /* 🔸 asegura que no aparezca la línea */
+  padding: 0 !important;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 
@@ -1140,6 +1139,7 @@ setTimeout(() => {
 
 </body>
 </html>
+
 
 
 
