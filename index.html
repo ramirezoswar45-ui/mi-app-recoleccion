@@ -654,6 +654,20 @@
   font-weight: 700;
 }
 
+/* 🔹 Cuadro alrededor del pedido y código */
+.pedido-card {
+  background: #fff;               /* Fondo blanco */
+  border: 1.2px solid #e0e0e0;   /* Línea delgada */
+  border-radius: 16px;            /* Bordes redondeados */
+  padding: 18px 20px;             /* Espacio interno */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;                      /* Separación entre elementos */
+  margin-bottom: 20px;            /* Espacio debajo del cuadro */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03); /* Sutil sombra opcional */
+}
+
+
 
   </style>
 </head>
@@ -770,23 +784,29 @@ padding:25px;
           <b>La tienda ha confirmado que el pedido está listo para recolectar</b>
         </div>
 
-        <div class="order-id" id="pedidoInfo">#72499003 Esteban Amazo</div>
+     <div class="pedido-card">
+  <div class="order-id" id="pedidoInfo">#72499003 Esteban Amazo</div>
 
-        
-        <div class="info-box">
-          <div class="info-row" id="codigoBox">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm3 1h6v2H9V7zm0 4h6v2H9v-2z"/></svg>
-            <span>Código de verificación: <b>8411</b></span>
-          </div>
-        </div>
-        
-   <div id="pedidoConfirmado" class="pedido-confirmado">
-          <div class="check-circle"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-          <span>Tengo el pedido</span>
-        </div>
+  <div class="info-box">
+    <div class="info-row" id="codigoBox">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm3 1h6v2H9V7zm0 4h6v2H9v-2z"/></svg>
+      <span>Código de verificación: <b>8411</b></span>
+    </div>
+  </div>
 
-        <button id="btnPedido" class="btn">Tengo el pedido</button>
-        <button class="btn-detalles">Detalles del pedido</button>
+  <div id="pedidoConfirmado" class="pedido-confirmado">
+    <div class="check-circle">
+      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <span>Tengo el pedido</span>
+  </div>
+
+  <button id="btnPedido" class="btn">Tengo el pedido</button>
+  <button class="btn-detalles">Detalles del pedido</button>
+</div>
+
 
 
      
@@ -1105,4 +1125,3 @@ setTimeout(() => {
 
 </body>
 </html>
-
