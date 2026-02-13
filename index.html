@@ -127,32 +127,31 @@
     }
     .arrival-recommendation b { color: #000; font-weight: 800; }
 
-    #successCard {
-      position: absolute;
-      bottom: -100%;
-      left: 0;
-      width: 100%;
-      background: white;
-      border-radius: 25px 25px 0 0;
-      padding: 30px 20px;
-      box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
-      transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-      z-index: 999;
-      box-sizing: border-box;
-      text-align: center;
-    }
-
-    .success-dot {
-      width: 60px;
-      height: 60px;
-      background: var(--success);
-      border-radius: 50%;
-      margin: 0 auto 15px;
-      display: flex;
-      align-items: center; justify-content: center;
-      box-shadow: 0 0 15px rgba(22,163,74,0.4);
-      animation: popIn 0.4s ease forwards;
-    }
+   #successCard {
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 28px 28px 0 0; /* Bordes más redondeados como en la imagen */
+  padding: 40px 24px 35px; /* Más espacio interno */
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+  transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  z-index: 999;
+  box-sizing: border-box;
+  text-align: center;
+}
+   .success-dot {
+  width: 72px; /* Un poco más grande para que resalte */
+  height: 72px;
+  background: var(--success);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(22,163,74,0.25);
+}
     .success-dot::after {
       content: '✓'; color: white; font-size: 30px; font-weight: bold;
     }
@@ -160,20 +159,19 @@
       0% { transform: scale(0.6); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
-
-    .start-delivery-btn {
-      width: 100%;
-      padding: 15px;
-      background: var(--accent);
-      border: none;
-      border-radius: 12px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s;
-    }
+.start-delivery-btn {
+  width: 100%;
+  padding: 16px;
+  background: #ff7e33; /* Naranja exacto de la imagen */
+  border: none;
+  border-radius: 14px; /* Redondeo intermedio */
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(255,126,51,0.2);
+}
     .start-delivery-btn:active { transform: scale(0.97); }
     .start-delivery-btn:hover { background: #ff812d; }
 
@@ -618,6 +616,37 @@
   transform: scale(0.95);
 }
 
+/* Estilo para "#6 Paula" */
+.order-id-success {
+  font-size: 22px;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+
+/* Estilo para "12 de feb., 6:17:32 pm" */
+#successDate {
+  font-size: 18px;
+  color: #000;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* Estilo para el texto pequeño de abajo */
+.success-subtext {
+  font-size: 14px;
+  color: #666; /* Gris suave */
+  line-height: 1.4;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.success-subtext b {
+  color: #333;
+  font-weight: 700;
+}
+
 
   </style>
 </head>
@@ -674,23 +703,19 @@ padding:25px;
     <div id="deliveryState" class="delivery-state">
       <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15908.139622992!2d-74.1481!3d4.6185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" allowfullscreen="" loading="lazy"></iframe>
       <div id="mapOverlay" class="map-overlay"></div>
-
 <div id="successCard">
   <div class="success-dot">
-    <div class="success-dot-bg"></div>
-    <svg width="80" height="80" viewBox="0 0 52 52">
-      <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-      <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
   </div>
 
-  <div class="order-id" id="pedidoInfoSuccess" style="margin:0">#72499003 Esteban Amazo</div>
-  <div id="successDate" style="font-size: 14px; color: #000; margin: 5px 0 15px; font-weight: 800;"></div>
+  <div class="order-id-success" id="pedidoInfoSuccess">#6 Paula</div>
+  <div id="successDate">12 de feb., 6:17:32 pm</div>
   
-  <div style="color: #000; font-weight: 400; font-size: 16px; margin-bottom: 2px;">Recolección exitosa</div>
-  
-  <div style="color: #000; font-weight: 400; font-size: 16px;">
-    Muéstrale esta página a <span id="nombreRestExito" style="font-weight: 800;"></span>
+  <div class="success-subtext">
+    Recolección exitosa<br>
+    Muéstrale esta página a <b id="nombreRestExito">Frisby (Paseo del Rio - 120)</b>
   </div>
 
   <button id="startDeliveryBtn" class="start-delivery-btn">Iniciar entrega</button>
@@ -1073,3 +1098,4 @@ setTimeout(() => {
 
 </body>
 </html>
+
