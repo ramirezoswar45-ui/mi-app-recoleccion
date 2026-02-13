@@ -654,17 +654,32 @@
   font-weight: 700;
 }
 
-/* 🔹 Cuadro alrededor del pedido y código */
+/* 🔹 Cuadro alrededor del pedido y código *//* 🔹 Ajuste del cuadro pedido-card */
 .pedido-card {
-  background: #fff;               /* Fondo blanco */
-  border: 1.2px solid #e0e0e0;   /* Línea delgada */
-  border-radius: 16px;            /* Bordes redondeados */
-  padding: 18px 20px;             /* Espacio interno */
+  background: #fff;
+  border: 1.2px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 12px 20px 18px 20px;  /* Reducimos padding superior para acercar al nombre */
   display: flex;
   flex-direction: column;
-  gap: 12px;                      /* Separación entre elementos */
-  margin-bottom: 20px;            /* Espacio debajo del cuadro */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03); /* Sutil sombra opcional */
+  gap: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+/* 🔹 Pedido info sin línea separadora */
+.order-id {
+  margin: 0;          /* Quitamos margen extra si lo había */
+  padding: 0;         /* Ajustamos padding */
+  font-weight: bold;
+}
+
+/* 🔹 Info-box (código) */
+.info-box {
+  padding: 0;         /* Quitamos padding extra para que no genere línea falsa */
+  margin: 0;
+  border: none;       /* Eliminamos cualquier borde que aparezca */
+  gap: 0;
 }
 
 
